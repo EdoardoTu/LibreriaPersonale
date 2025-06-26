@@ -22,8 +22,8 @@ public class Repository2 extends Template {
         return filepath;
     }
     @Override
-    public void writeData(String filepath, ArrayList<Libro> libri) {
-        try (FileWriter filewriter = new FileWriter(filepath)){
+    public void writeData( ArrayList<Libro> libri) {
+        try (FileWriter filewriter = new FileWriter(this.filepath)){
 
             gson.toJson(libri, filewriter);
             //notifyObservers(libri); per il futuro Observer
@@ -34,7 +34,7 @@ public class Repository2 extends Template {
     }
 
     @Override
-    public ArrayList<Libro> readData(String filepath) {
+    public ArrayList<Libro> readData() {
         try (FileReader fileReader = new FileReader(filepath);){
 
             Type arrayType = new TypeToken<ArrayList<Libro>>() {
