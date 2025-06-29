@@ -2,13 +2,13 @@ package Command;
 
 import Template.Repository2;
 
-public class AggiornaCommand implements Command {
+public class AggiornaCommand extends undoComune {
 
     private Repository2 repo;
     public AggiornaCommand(Repository2 r) {
-        this.repo = r;
-
+        super(r);
     }
+
     @Override
     public void execute() {
         repo.delete(repo.getFilepath());

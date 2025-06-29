@@ -2,11 +2,10 @@ package Command;
 
 import Template.Repository2;
 
-public class rimuoviCommand implements Command {
+public class rimuoviCommand extends undoComune{
     private Repository2 repo;
     public rimuoviCommand(Repository2 r) {
-        this.repo = r;
-
+        super(r);
     }
 
     @Override

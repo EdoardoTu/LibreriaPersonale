@@ -2,12 +2,11 @@ package Command;
 
 import Template.Repository2;
 
-public class aggiungiCommand implements Command {
+public class aggiungiCommand extends undoComune {
 
     private Repository2 repo;
     public aggiungiCommand(Repository2 r) {
-        this.repo = r;
-
+        super(r);
     }
     @Override
     public void execute() {
