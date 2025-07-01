@@ -18,7 +18,7 @@ public abstract class undoComune implements Command {
     public void undo() {
         if (!vecchioStato.isEmpty()) {
             System.out.println(vecchioStato);
-            repo.writeData(vecchioStato);
+            repo.writeData(repo.getFilepath(), vecchioStato);
         }
     }
 }

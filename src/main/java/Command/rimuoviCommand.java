@@ -3,7 +3,7 @@ package Command;
 import Template.Repository2;
 
 public class rimuoviCommand extends undoComune{
-    private Repository2 repo;
+
     public rimuoviCommand(Repository2 r) {
         super(r);
     }

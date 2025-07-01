@@ -22,11 +22,11 @@ public class Repository2 extends Template {
         return filepath;
     }
     @Override
-    public void writeData( ArrayList<Libro> libri) {
-        try (FileWriter filewriter = new FileWriter(this.filepath)){
+    public void writeData(String filepath, ArrayList<Libro> libri) {
+        try (FileWriter filewriter = new FileWriter(filepath)){
 
             gson.toJson(libri, filewriter);
-            //notifyObservers(libri); per il futuro Observer
+            notifyObservers(libri);
             filewriter.close();
         } catch (IOException e) {
             throw new RuntimeException();
@@ -34,7 +34,7 @@ public class Repository2 extends Template {
     }
 
     @Override
-    public ArrayList<Libro> readData() {
+    public ArrayList<Libro> readData(String filepath) {
         try (FileReader fileReader = new FileReader(filepath);){
 
             Type arrayType = new TypeToken<ArrayList<Libro>>() {
@@ -44,8 +44,8 @@ public class Repository2 extends Template {
                 System.out.println("Nessun libro trovato, creo un nuovo file");
                 return null;
             } else {
-                //System.out.println(getObservers());
-                //notifyObservers(libriJson);
+                System.out.println(getObservers());
+                notifyObservers(libriJson);
                 return libriJson;
             }
         } catch (IOException e) {

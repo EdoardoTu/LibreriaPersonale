@@ -10,7 +10,6 @@ import java.util.Stack;
 import Command.*;
 
 public class Center extends LibreriaSubject {
-    private static Center instance;
     private Repository2 repositoryLibri;
     public static inputHandler inputHandler ;
     private String filepath;
@@ -18,38 +17,45 @@ public class Center extends LibreriaSubject {
 
 
 
-    private Center() {
+    public Center() {
         inputHandler = new inputHandler();
     }
-     public static Center getInstance() {
-        if (instance == null) {
-            instance = new Center();
+
+
+    public ArrayList<Libro> getLibri() {
+        if (repositoryLibri == null) {
+            System.out.println("Aggiungi prima un libro.");
+            return null;
         }
-        return instance;
+        return repositoryLibri.readData(this.filepath);
     }
     public void caricaLibri(String filepath) {
+        System.out.println(filepath);
         this.repositoryLibri = new Repository2(filepath);
+        System.out.println(repositoryLibri.getFilepath());
         this.filepath = filepath;
     }
 
     public void aggiungiLibro(){
-        Command aggiungiCommand = new aggiungiCommand(repositoryLibri);
+        System.out.println("Aggiungi libro.");
+        System.out.println(repositoryLibri.getFilepath());
+        Command aggiungiCommand = new aggiungiCommand(this.repositoryLibri);
         aggiungiCommand.execute();
         storiaComandi.push(aggiungiCommand);
-        //chiamata da GUI TO DO
+
     }
 
     public void aggiornaLibro() {
         Command updateCommand = new AggiornaCommand(repositoryLibri);
         updateCommand.execute();
         storiaComandi.push(updateCommand);
-        //chiamata da GUI TO DO
+
     }
     public void rimuoviLibro() {
         Command removeCommand = new rimuoviCommand(repositoryLibri);
         removeCommand.execute();
         storiaComandi.push(removeCommand);
-        //chiamata da GUI TO DO
+
     }
     public void aggiungiObserver(InterfacciaObserver observer) {
         repositoryLibri.addObserver(observer);
