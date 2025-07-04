@@ -10,6 +10,7 @@ public class aggiungiCommand extends undoComune {
     }
     @Override
     public void execute() {
+        vecchioStato = repo.readData(repo.getFilepath());
         System.out.println("aggiungiCommand");
         System.out.println(repo.getFilepath());
         repo.save(repo.getFilepath());

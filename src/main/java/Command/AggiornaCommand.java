@@ -11,6 +11,7 @@ public class AggiornaCommand extends undoComune {
 
     @Override
     public void execute() {
+        vecchioStato = repo.readData(repo.getFilepath());
         repo.update(repo.getFilepath());
     }
 }

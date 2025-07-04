@@ -71,4 +71,7 @@ public class Center extends LibreriaSubject {
             System.out.println("Nessun comando da annullare.");
         }
     }
+    public void notificaObserver(ArrayList<Libro> libri) {
+        repositoryLibri.notifyObservers(libri);
+    }
 }

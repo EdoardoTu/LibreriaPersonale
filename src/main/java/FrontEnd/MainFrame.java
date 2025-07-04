@@ -10,9 +10,11 @@ import java.util.ArrayList;
 
 public class MainFrame  extends JFrame {
     private JTable tabellaLibri;
+    private JTextField searchField;
     private final Center center;
     private File selectedFile;
     private listaLibriGUI libriGUI;
+    ArrayList<Libro> risultati = new ArrayList<>();
 
 
     public MainFrame() {
@@ -28,6 +30,12 @@ public class MainFrame  extends JFrame {
         JPanel mainPanel = new JPanel(new BorderLayout());
         JPanel topPanel = new JPanel(new BorderLayout());
 
+        searchField = new JTextField();
+        JButton searchButton = new JButton("Cerca");
+        searchButton.addActionListener(e -> cercaLibri());
+        searchField.addActionListener(e -> cercaLibri());
+        topPanel.add(searchField, BorderLayout.CENTER);
+        topPanel.add(searchButton, BorderLayout.EAST);
 
         JPanel northPanel = new JPanel(new BorderLayout());
         JMenuBar menuBar = new JMenuBar();
@@ -35,6 +43,7 @@ public class MainFrame  extends JFrame {
         JButton aggiungiButton = new JButton("Aggiungi");
         JButton modificaButton = new JButton("Modifica");
         JButton rimuoviButton = new JButton("Rimuovi");
+        JButton undoButton = new JButton("Undo");
 
 
         aggiungiButton.addActionListener(e -> {
@@ -53,10 +62,15 @@ public class MainFrame  extends JFrame {
             fileChooser();
             libriGUI.setLibri(center.getLibri());
         });
+        undoButton.addActionListener(e -> {
+            center.undo();
+            libriGUI.setLibri(center.getLibri());
+        });
         menuBar.add(caricaButton);
         menuBar.add(aggiungiButton);
         menuBar.add(modificaButton);
         menuBar.add(rimuoviButton);
+        menuBar.add(undoButton);
 
         northPanel.add(menuBar, BorderLayout.NORTH);
         northPanel.add(topPanel, BorderLayout.SOUTH);
@@ -102,6 +116,25 @@ private void fileChooser() {
             JOptionPane.showMessageDialog(this, "Errore durante il caricamento del file: " + ex.getMessage());
         }
     }
+    }
+
+    private void cercaLibri() {
+        String searchText = searchField.getText().trim().toLowerCase();
+        if (searchText.isEmpty()) {
+            libriGUI.setLibri(center.getLibri());
+        }
+
+        risultati.clear();
+        for (Libro libro : center.getLibri()) {
+            if (libro.getTitolo().toLowerCase().contains(searchText) ||
+                    libro.getAutore().toLowerCase().contains(searchText)) {
+                risultati.add(libro);
+            }
+        }
+        libriGUI.setLibri(risultati);
+        System.out.println(risultati);
+        center.notificaObserver(risultati);
+
     }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
