@@ -2,6 +2,9 @@ package BackEnd;
 
 import Observer.InterfacciaObserver;
 import Observer.LibreriaSubject;
+import Strategy.FiltroPerGenere;
+import Strategy.FiltroPerStato;
+import Strategy.StrategyConcreto;
 import Template.Libro;
 import Template.Repository2;
 
@@ -14,11 +17,13 @@ public class Center extends LibreriaSubject {
     public static inputHandler inputHandler ;
     private String filepath;
     private Stack<Command> storiaComandi = new Stack<>();
+    private StrategyConcreto filtroManager;
 
 
 
     public Center() {
-        inputHandler = new inputHandler();
+        //inputHandler = new inputHandler();
+        this.filtroManager = new StrategyConcreto();
     }
 
 
@@ -74,4 +79,45 @@ public class Center extends LibreriaSubject {
     public void notificaObserver(ArrayList<Libro> libri) {
         repositoryLibri.notifyObservers(libri);
     }
+
+    public void filtraPerGenere(String genere) {
+        filtroManager.aggiungiFiltro(genere,new FiltroPerGenere(genere));
+    }
+
+    public void filtraPerStato(String stato) {
+
+        filtroManager.aggiungiFiltro(stato,new FiltroPerStato(stato));
+    }
+    public ArrayList<Libro> applicaFiltri(ArrayList<Libro> libri) {
+        return filtroManager.applicaFiltri(libri);
+    }
+    public void rimuoviFiltro(String valore) {
+        filtroManager.rimuoviFiltro(valore);
+
+    }
+    public void rimuoviTuttiFiltri() {
+        filtroManager.pulisciFiltri();
+
+    }
+
+    public  static void main(String[] args) {
+        Center center = new Center();
+        center.caricaLibri("src/main/resources/libri.json");
+         ArrayList<Libro> libri = center.getLibri();
+        //center.aggiungiLibro();
+        //center.filtraPerGenere("fantasy");
+
+        //System.out.println("Libri filtrati per genere fantasy: " + center.applicaFiltri(libri));
+
+        //center.filtraPerStato("da_leggere");
+        //System.out.println("Libri filtrati per stato da leggere: " + center.applicaFiltri(libri));
+        center.filtraPerGenere("horror");
+        center.filtraPerStato("letto");
+        System.out.println("Libri filtrati : " + center.applicaFiltri(libri));
+        center.rimuoviFiltro("horror");
+        System.out.println("Libri filtrati dopo rimozione del filtro per genere horror: " + center.applicaFiltri(libri));
+        center.rimuoviTuttiFiltri();
+        System.out.println("Libri filtrati : " + center.applicaFiltri(libri));
+    }
+
 }
