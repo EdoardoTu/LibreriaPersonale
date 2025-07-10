@@ -8,12 +8,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class StrategyConcreto {
-    private FiltroStrategy filtroStrategy;
+    //private FiltroStrategy filtroStrategy;
     //private ArrayList<FiltroStrategy> filtriAttivi = new ArrayList<>();
     private final Map<String, FiltroStrategy> filtriAttivi = new HashMap<>();
-    public void setStrategy(FiltroStrategy filtroStrategy) {
-        this.filtroStrategy = filtroStrategy;
-    }
+
 
     public void aggiungiFiltro(String valore,FiltroStrategy filtro) {
         System.out.println(filtro);
@@ -34,14 +32,27 @@ public class StrategyConcreto {
         }
         return true;
     }
-
     public ArrayList<Libro> applicaFiltri(ArrayList<Libro> libri) {
         if (filtriAttivi.isEmpty()) {
             return new ArrayList<>(libri);
         }
-        return libri.stream()
-                .filter(libro -> filtriAttivi.values().stream()
-                        .allMatch(f -> f.filtra(libro)))
-                .collect(Collectors.toCollection(ArrayList::new));
+
+        ArrayList<Libro> libriFiltrati = new ArrayList<>();
+
+        for (Libro libro : libri) {
+            boolean passaTuttiIFiltri = true;
+
+            for (FiltroStrategy filtro : filtriAttivi.values()) {
+                if (!filtro.filtra(libro)) {
+                    passaTuttiIFiltri = false;
+                    break;
+                }
+            }
+
+            if (passaTuttiIFiltri) {
+                libriFiltrati.add(libro);
+            }
+        }
+        return libriFiltrati;
     }
 }

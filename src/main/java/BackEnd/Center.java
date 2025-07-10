@@ -2,23 +2,24 @@ package BackEnd;
 
 import Observer.InterfacciaObserver;
 import Observer.LibreriaSubject;
-import Strategy.FiltroPerGenere;
-import Strategy.FiltroPerStato;
-import Strategy.StrategyConcreto;
+import Strategy.*;
 import Template.Libro;
 import Template.Repository2;
 
 import java.util.ArrayList;
 import java.util.Stack;
 import Command.*;
+import Template.Template;
 
 public class Center extends LibreriaSubject {
-    private Repository2 repositoryLibri;
-    public static inputHandler inputHandler ;
+    private Template repositoryLibri;
+    //public static inputHandler inputHandler ;
     private String filepath;
     private Stack<Command> storiaComandi = new Stack<>();
     private StrategyConcreto filtroManager;
-
+    private Command aggiungiCommand,
+            removeCommand,
+            updateCommand;
 
 
     public Center() {
@@ -39,31 +40,32 @@ public class Center extends LibreriaSubject {
         this.repositoryLibri = new Repository2(filepath);
         System.out.println(repositoryLibri.getFilepath());
         this.filepath = filepath;
+        filtroManager.pulisciFiltri();
     }
 
     public void aggiungiLibro(){
         System.out.println("Aggiungi libro.");
         System.out.println(repositoryLibri.getFilepath());
-        Command aggiungiCommand = new aggiungiCommand(this.repositoryLibri);
+        aggiungiCommand = new aggiungiCommand(this.repositoryLibri);
         aggiungiCommand.execute();
         storiaComandi.push(aggiungiCommand);
 
     }
 
     public void aggiornaLibro() {
-        Command updateCommand = new AggiornaCommand(repositoryLibri);
+         updateCommand = new AggiornaCommand(repositoryLibri);
         updateCommand.execute();
         storiaComandi.push(updateCommand);
 
     }
     public void rimuoviLibro() {
-        Command removeCommand = new rimuoviCommand(repositoryLibri);
+        removeCommand = new rimuoviCommand(repositoryLibri);
         removeCommand.execute();
         storiaComandi.push(removeCommand);
 
     }
     public void aggiungiObserver(InterfacciaObserver observer) {
-        repositoryLibri.addObserver(observer);
+        this.addObserver(observer);
     }
 
     public void undo(){
@@ -77,10 +79,10 @@ public class Center extends LibreriaSubject {
         }
     }
     public void notificaObserver(ArrayList<Libro> libri) {
-        repositoryLibri.notifyObservers(libri);
+        this.notifyObservers(libri);
     }
 
-    public void filtraPerGenere(String genere) {
+    public void filtroPerGenere(String genere) {
         filtroManager.aggiungiFiltro(genere,new FiltroPerGenere(genere));
     }
 
@@ -88,19 +90,35 @@ public class Center extends LibreriaSubject {
 
         filtroManager.aggiungiFiltro(stato,new FiltroPerStato(stato));
     }
-    public ArrayList<Libro> applicaFiltri(ArrayList<Libro> libri) {
-        return filtroManager.applicaFiltri(libri);
+    public void applicaFiltri(ArrayList<Libro> libriGUI) {
+        ArrayList<Libro> libriFiltrati=filtroManager.applicaFiltri(libriGUI);
+        // repositoryLibri.notifyObservers(libriFiltrati);
+        this.notifyObservers(libriFiltrati);
     }
-    public void rimuoviFiltro(String valore) {
+    public void rimuoviFiltro(String valore,ArrayList<Libro> libriGUI) {
         filtroManager.rimuoviFiltro(valore);
-
+        System.out.println(filtroManager.filtriAttivi());
+        if(filtroManager.filtriAttivi()){
+            ArrayList<Libro> libriFiltrati = filtroManager.applicaFiltri(libriGUI);
+            //repositoryLibri.notifyObservers(libriFiltrati);
+            this.notifyObservers(libriFiltrati);
+        } else {
+            //repositoryLibri.notifyObservers(libriGUI);
+            this.notifyObservers(libriGUI);
+        }
+        //repositoryLibri.notifyObservers(repositoryLibri.getAll());
     }
-    public void rimuoviTuttiFiltri() {
+    public void rimuoviTuttiFiltri(ArrayList<Libro> libriGUI,boolean flag) {
         filtroManager.pulisciFiltri();
-
+        if(flag)
+            //repositoryLibri.notifyObservers(libriGUI);
+            this.notifyObservers(libriGUI);
+        else
+            //repositoryLibri.notifyObservers(getLibri());
+            this.notifyObservers(getLibri());
     }
 
-    public  static void main(String[] args) {
+    /*public  static void main(String[] args) {
         Center center = new Center();
         center.caricaLibri("src/main/resources/libri.json");
          ArrayList<Libro> libri = center.getLibri();
@@ -118,6 +136,6 @@ public class Center extends LibreriaSubject {
         System.out.println("Libri filtrati dopo rimozione del filtro per genere horror: " + center.applicaFiltri(libri));
         center.rimuoviTuttiFiltri();
         System.out.println("Libri filtrati : " + center.applicaFiltri(libri));
-    }
+    }*/
 
 }

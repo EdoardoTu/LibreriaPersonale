@@ -18,9 +18,7 @@ public class Repository2 extends Template {
         super(filepath);
         this.filepath = filepath;
     }
-    public String getFilepath(){
-        return filepath;
-    }
+
     @Override
     public void writeData(String filepath, ArrayList<Libro> libri) {
         try (FileWriter filewriter = new FileWriter(filepath)){
@@ -44,7 +42,7 @@ public class Repository2 extends Template {
                 System.out.println("Nessun libro trovato, creo un nuovo file");
                 return null;
             } else {
-                System.out.println(getObservers());
+                //System.out.println(getObservers());
                 notifyObservers(libriJson);
                 return libriJson;
             }

@@ -15,7 +15,7 @@ public class removeDialog {
             return false;
         }
 
-        // 1. Selezione libro per TITOLO
+
         List<String> titoliUnici = libri.stream()
                 .map(Libro::getTitolo)
                 .distinct()
@@ -33,13 +33,11 @@ public class removeDialog {
 
         if (selectedTitle == null) return false;
 
-        // 2. Mostra tutti i libri con quel titolo (per disambiguare)
         List<Libro> libriDaRimuovere = libri.stream()
                 .filter(l -> l.getTitolo().equals(selectedTitle))
                 .toList();
 
         if (libriDaRimuovere.size() > 1) {
-            // Se ci sono più libri con lo stesso titolo, mostra una tabella per la selezione
             String[] columnNames = {"Titolo", "Autore", "ISBN"};
             Object[][] data = libriDaRimuovere.stream()
                     .map(l -> new Object[]{l.getTitolo(), l.getAutore(), l.getIsbn()})
@@ -60,7 +58,6 @@ public class removeDialog {
             }
             return false;
         } else {
-            // Se c'è un solo libro con quel titolo
             int choice = JOptionPane.showConfirmDialog(null,
                     "Confermi la rimozione del libro:\n" +
                             "Titolo: " + libriDaRimuovere.get(0).getTitolo() + "\n" +

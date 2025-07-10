@@ -11,7 +11,6 @@ public class InputLibriDialog {
         boolean continua = true;
 
         while (continua) {
-            // Pannello per gli input
             JPanel panel = new JPanel(new GridLayout(0, 2));
 
             // Campi di input
@@ -36,7 +35,6 @@ public class InputLibriDialog {
             panel.add(new JLabel("Valutazione (1-5):"));
             panel.add(valutazioneSpinner);
 
-            // Mostra il dialog e verifica l'OK
             int result = JOptionPane.showConfirmDialog(
                     null, panel, "Aggiungi Libro",
                     JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
@@ -44,19 +42,16 @@ public class InputLibriDialog {
 
             if (result == JOptionPane.OK_OPTION) {
                 try {
-                    // Validazione Titolo (non vuoto e senza numeri)
                     String titolo = titoloField.getText().trim();
                     if (titolo.isEmpty() || titolo.matches(".*\\d.*")) {
                         throw new IllegalArgumentException("Titolo non valido: no numeri/campi vuoti");
                     }
 
-                    // Validazione Autore (non vuoto e senza numeri)
                     String autore = autoreField.getText().trim();
                     if (autore.isEmpty() || autore.matches(".*\\d.*")) {
                         throw new IllegalArgumentException("Autore non valido: no numeri/campi vuoti");
                     }
 
-                    // Validazione ISBN (numero intero)
                     int isbn;
                     try {
                         isbn = Integer.parseInt(isbnField.getText().trim());
@@ -64,14 +59,12 @@ public class InputLibriDialog {
                         throw new IllegalArgumentException("ISBN deve essere un numero intero");
                     }
 
-                    // Ottenimento altri valori
                     Libro.Genere genere = (Libro.Genere) genereCombo.getSelectedItem();
                     Libro.Stato stato = (Libro.Stato) statoCombo.getSelectedItem();
                     if(stato == Libro.Stato.da_leggere || stato == Libro.Stato.in_lettura){
                         valutazioneSpinner.hide();
                         libri.add(new Libro(titolo, autore, isbn, genere, -1, stato));
 
-                        // Chiedi se continuare
                         continua = JOptionPane.showConfirmDialog(
                                 null, "Aggiungere un altro libro?", "Continua?",
                                 JOptionPane.YES_NO_OPTION
@@ -80,10 +73,8 @@ public class InputLibriDialog {
                     else {
                         int valutazione = (int) valutazioneSpinner.getValue();
 
-                        // Aggiungi il libro alla lista
                         libri.add(new Libro(titolo, autore, isbn, genere, valutazione, stato));
 
-                        // Chiedi se continuare
                         continua = JOptionPane.showConfirmDialog(
                                 null, "Aggiungere un altro libro?", "Continua?",
                                 JOptionPane.YES_NO_OPTION

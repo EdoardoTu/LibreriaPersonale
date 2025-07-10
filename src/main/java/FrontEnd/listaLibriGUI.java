@@ -15,7 +15,7 @@ public class listaLibriGUI extends AbstractTableModel implements InterfacciaObse
     }
     @Override
     public void update(ArrayList<Libro> libri) {
-        this.libri = libri;
+        this.libri = libri; // Ricarica i dati
         fireTableDataChanged();
     }
     public void setLibri(ArrayList<Libro> libri) {

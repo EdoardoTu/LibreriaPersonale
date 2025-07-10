@@ -2,15 +2,17 @@ package Command;
 
 import Template.Libro;
 import Template.Repository2;
+import Template.Template;
 
 import java.util.ArrayList;
 
 public abstract class undoComune implements Command {
-    protected final Repository2 repo;
+    protected final Template repo;
     protected ArrayList<Libro> vecchioStato;
 
 
-    public undoComune(Repository2 repo) {
+    public undoComune(Template repo) {
+
         this.repo = repo;
     }
 

@@ -1,18 +1,18 @@
 package Command;
 
 import Template.Repository2;
+import Template.Template;
 
 public class aggiungiCommand extends undoComune {
 
 
-    public aggiungiCommand(Repository2 r) {
+    public aggiungiCommand(Template r) {
         super(r);
     }
+
     @Override
     public void execute() {
         vecchioStato = repo.readData(repo.getFilepath());
-        System.out.println("aggiungiCommand");
-        System.out.println(repo.getFilepath());
         repo.save(repo.getFilepath());
     }
 }

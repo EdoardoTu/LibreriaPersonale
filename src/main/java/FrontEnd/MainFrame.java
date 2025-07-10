@@ -5,6 +5,7 @@ import Template.Libro;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -15,6 +16,8 @@ public class MainFrame  extends JFrame {
     private File selectedFile;
     private listaLibriGUI libriGUI;
     ArrayList<Libro> risultati = new ArrayList<>();
+    MenuComposite statoMenu;
+    MenuComposite genereMenu;
 
 
     public MainFrame() {
@@ -26,58 +29,25 @@ public class MainFrame  extends JFrame {
         JFrame frame = new JFrame("Gestione Libri - Java");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1200, 800);
+        //libriCaricati = new ArrayList<>();
 
+        // Crea il pannello principale
         JPanel mainPanel = new JPanel(new BorderLayout());
         JPanel topPanel = new JPanel(new BorderLayout());
-
         searchField = new JTextField();
         JButton searchButton = new JButton("Cerca");
         searchButton.addActionListener(e -> cercaLibri());
         searchField.addActionListener(e -> cercaLibri());
+
         topPanel.add(searchField, BorderLayout.CENTER);
         topPanel.add(searchButton, BorderLayout.EAST);
-
         JPanel northPanel = new JPanel(new BorderLayout());
-        JMenuBar menuBar = new JMenuBar();
-        JButton caricaButton = new JButton("Carica da JSON");
-        JButton aggiungiButton = new JButton("Aggiungi");
-        JButton modificaButton = new JButton("Modifica");
-        JButton rimuoviButton = new JButton("Rimuovi");
-        JButton undoButton = new JButton("Undo");
-
-
-        aggiungiButton.addActionListener(e -> {
-            center.aggiungiLibro();
-            libriGUI.setLibri(center.getLibri());
-        });
-        modificaButton.addActionListener(e -> {
-            center.aggiornaLibro();
-            libriGUI.setLibri(center.getLibri());
-        });
-        rimuoviButton.addActionListener(e -> {
-            center.rimuoviLibro();
-            libriGUI.setLibri(center.getLibri());
-        });
-        caricaButton.addActionListener(e -> {
-            fileChooser();
-            libriGUI.setLibri(center.getLibri());
-        });
-        undoButton.addActionListener(e -> {
-            center.undo();
-            libriGUI.setLibri(center.getLibri());
-        });
-        menuBar.add(caricaButton);
-        menuBar.add(aggiungiButton);
-        menuBar.add(modificaButton);
-        menuBar.add(rimuoviButton);
-        menuBar.add(undoButton);
-
-        northPanel.add(menuBar, BorderLayout.NORTH);
+        northPanel.add(menuComposite(), BorderLayout.NORTH);
         northPanel.add(topPanel, BorderLayout.SOUTH);
         mainPanel.add(northPanel, BorderLayout.NORTH);
 
         libriGUI = new listaLibriGUI(new ArrayList<>());
-        this.tabellaLibri = new JTable(libriGUI);
+        this.tabellaLibri = new JTable(libriGUI); // Usa this.booksTable invece di creare una variabile locale
         this.tabellaLibri.setAutoCreateRowSorter(true);
         this.tabellaLibri.setFillsViewportHeight(true);
         JScrollPane scrollPane = new JScrollPane(this.tabellaLibri);
@@ -85,6 +55,105 @@ public class MainFrame  extends JFrame {
         mainPanel.add(scrollPane, BorderLayout.CENTER);
         frame.add(mainPanel);
         frame.setVisible(true);
+    }
+
+    private JMenuBar menuComposite() {
+        JMenuBar menuBar = new JMenuBar();
+        MenuComposite fileMenu = new MenuComposite("File");
+        MenuComposite editMenu = new MenuComposite("Modifica");
+        MenuComposite filterMenu = new MenuComposite("Filtri");
+
+        genereMenu = new MenuComposite("Per Genere");
+        statoMenu = new MenuComposite("Per Stato");
+
+        fileMenu.aggiungi(new MenuItem("Carica da JSON", e -> {
+            fileChooser();
+            libriGUI.setLibri(center.getLibri());
+            rimuoviFiltri(genereMenu, statoMenu);
+            searchField.setText("");
+        }));
+
+
+        editMenu.aggiungi(new MenuItem("Aggiungi Libro", e -> {
+            center.aggiungiLibro();
+            rimuoviFiltri(genereMenu, statoMenu);
+            searchField.setText("");
+            //libriGUI.setLibri(gestionLibreria.getLibri());
+        }));
+        editMenu.aggiungi(new MenuItem("Modifica Libro", e -> {
+            center.aggiornaLibro();
+            rimuoviFiltri(genereMenu, statoMenu);
+            searchField.setText("");
+            //libriGUI.setLibri(gestionLibreria.getLibri());
+
+        }));
+        editMenu.aggiungi(new MenuItem("Rimuovi Libro", e -> {
+            center.rimuoviLibro();
+            rimuoviFiltri(genereMenu, statoMenu);
+            searchField.setText("");
+            //libriGUI.setLibri(gestionLibreria.getLibri());
+        }));
+        editMenu.aggiungi(new MenuItem("Annulla ultima operazione", e -> {
+            center.undo();
+            rimuoviFiltri(genereMenu, statoMenu);
+            searchField.setText("");
+            //libriGUI.setLibri(gestionLibreria.getLibri());
+        }));
+        // Sottomenu per genere
+        for (Libro.Genere g : Libro.Genere.values()) {
+            genereMenu.aggiungi(createFilterCheckboxItem(g.name().toLowerCase(),
+                    g.name(), "genere"));
+        }
+
+        // Sottomenu per stato
+        for (Libro.Stato s : Libro.Stato.values()) {
+            String statoName = s.name().toLowerCase().replace("_", " ");
+            statoMenu.aggiungi(createFilterCheckboxItem(statoName, s.name(), "stato"));
+        }
+
+        filterMenu.aggiungi(genereMenu);
+        filterMenu.aggiungi(statoMenu);
+
+        filterMenu.aggiungi(new MenuItem("Pulisci filtri", e -> rimuoviFiltri(genereMenu, statoMenu)));
+
+        // Costruisci la menu bar
+        menuBar.add(fileMenu.build());
+        menuBar.add(editMenu.build());
+        menuBar.add(filterMenu.build());
+
+        return menuBar;
+    }
+
+    private Component createFilterCheckboxItem(String displayName, String filterValue, String filterType) {
+        ActionListener listener = e -> {
+            JCheckBoxMenuItem source = (JCheckBoxMenuItem) e.getSource();
+            if (source.isSelected()) {
+                if ("genere".equals(filterType)) {
+                    center.filtroPerGenere(filterValue);
+                } else {
+                    center.filtraPerStato(filterValue);
+                }
+                // searchField.setText(""); // Pulisce il campo di ricerca quando si applica un filtro
+                if(!risultati.isEmpty()){
+                    center.applicaFiltri(risultati);
+                }
+                else
+                    center.applicaFiltri(libriGUI.getLibri());
+            } else if(!risultati.isEmpty()){
+                center.rimuoviFiltro(filterValue, risultati);
+            }
+            else center.rimuoviFiltro(filterValue, center.getLibri());
+        };
+
+        /*return new MenuItem(displayName, listener) {
+            @Override
+            public JComponent build() {
+                JCheckBoxMenuItem item = new JCheckBoxMenuItem(nome);
+                item.addActionListener(listener); // Usiamo la variabile locale
+                return item;
+            }
+        };*/
+        return new SubItem(displayName, listener);
 
     }
 
@@ -135,6 +204,22 @@ private void fileChooser() {
         System.out.println(risultati);
         center.notificaObserver(risultati);
 
+    }
+    private void rimuoviFiltri(MenuComposite genereMenu, MenuComposite statoMenu) {
+        System.out.println("Rimuovo i filtri");
+
+        for (int i = 0; i < genereMenu.getItemCount(); i++) {
+            ((SubItem) genereMenu.getChild(i)).setFalse();
+        }
+        for (int i = 0; i < statoMenu.getItemCount(); i++) {
+            ((SubItem) statoMenu.getChild(i)).setFalse();
+        }
+        System.out.println("Rimuovo i filtri");
+        if (risultati.isEmpty()) {
+            center.rimuoviTuttiFiltri(center.getLibri(),false);
+        } else {
+            center.rimuoviTuttiFiltri(risultati,true);
+        }
     }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {

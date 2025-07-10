@@ -12,8 +12,12 @@ public abstract class Template extends LibreriaSubject {
     private String filepath;
 
     public Template(String filepath) {
-
         this.filepath = filepath;
+    }
+
+    public String getFilepath() {
+
+        return filepath;
     }
 
     public final void save(String filepath) {
@@ -42,7 +46,7 @@ public abstract class Template extends LibreriaSubject {
         }
     }
 
-    protected abstract void writeData(String filepath, ArrayList<Libro> libriJson);
+    public abstract void writeData(String filepath, ArrayList<Libro> libriJson);
 
-    protected abstract ArrayList<Libro> readData(String filepath);
+    public abstract ArrayList<Libro> readData(String filepath);
 }

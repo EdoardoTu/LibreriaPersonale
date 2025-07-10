@@ -15,7 +15,6 @@ public class AggiornaLibroDialog {
             return false;
         }
 
-        // 1. Selezione libro per TITOLO (con controllo duplicati)
         List<String> titoliUnici = libri.stream()
                 .map(Libro::getTitolo)
                 .distinct()
@@ -40,7 +39,6 @@ public class AggiornaLibroDialog {
                 .orElse(null);
 
 
-        // 3. Selezione attributo da modificare (come prima)
         String[] attributi = {"titolo", "autore", "genere", "valutazione", "stato"};
         String attributo = (String) JOptionPane.showInputDialog(
                 null,
@@ -54,7 +52,6 @@ public class AggiornaLibroDialog {
 
         if (attributo == null) return false;
 
-        // 4. Input nuovo valore con validazione (identico alla versione precedente)
         try {
             switch (attributo.toLowerCase()) {
                 case "titolo":

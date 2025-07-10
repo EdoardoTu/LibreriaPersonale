@@ -1,11 +1,12 @@
 package Command;
 
 import Template.Repository2;
+import Template.Template;
 
 public class AggiornaCommand extends undoComune {
 
 
-    public AggiornaCommand(Repository2 r) {
+    public AggiornaCommand(Template r) {
         super(r);
     }
 
