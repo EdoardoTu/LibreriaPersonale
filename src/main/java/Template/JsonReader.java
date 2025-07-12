@@ -10,11 +10,11 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-public class Repository2 extends Template {
+public class JsonReader extends Template {
     private final Gson gson = new Gson();
     //private final LibreriaSubject library = new LibreriaSubject();
     private final String filepath;
-    public Repository2(String filepath) {
+    public JsonReader(String filepath) {
         super(filepath);
         this.filepath = filepath;
     }

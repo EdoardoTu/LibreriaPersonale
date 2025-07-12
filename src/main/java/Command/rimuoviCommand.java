@@ -1,22 +1,19 @@
 package Command;
 
-import Template.Repository2;
-import Template.Template;
+import Template.*;
 
 public class rimuoviCommand extends undoComune{
 
-    public rimuoviCommand(Repository2 r) {
-        super(r);
-    }
+    private Libro daRimuovere;
 
-    public rimuoviCommand(Template repo) {
+    public rimuoviCommand(Template repo, Libro daRimuovere) {
         super(repo);
-
+        this.daRimuovere = daRimuovere;
     }
 
     @Override
     public void execute() {
         vecchioStato = repo.readData(repo.getFilepath());
-        repo.delete(repo.getFilepath());
+        repo.delete(repo.getFilepath(),daRimuovere);
     }
 }

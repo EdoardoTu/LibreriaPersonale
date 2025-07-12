@@ -47,7 +47,7 @@ public class MainFrame  extends JFrame {
         mainPanel.add(northPanel, BorderLayout.NORTH);
 
         libriGUI = new listaLibriGUI(new ArrayList<>());
-        this.tabellaLibri = new JTable(libriGUI); // Usa this.booksTable invece di creare una variabile locale
+        this.tabellaLibri = new JTable(libriGUI); 
         this.tabellaLibri.setAutoCreateRowSorter(true);
         this.tabellaLibri.setFillsViewportHeight(true);
         JScrollPane scrollPane = new JScrollPane(this.tabellaLibri);
@@ -75,20 +75,23 @@ public class MainFrame  extends JFrame {
 
 
         editMenu.aggiungi(new MenuItem("Aggiungi Libro", e -> {
-            center.aggiungiLibro();
+            ArrayList<Libro> libri = InputLibriDialog.showBookInputDialog();
+            center.aggiungiLibro(libri);
             rimuoviFiltri(genereMenu, statoMenu);
             searchField.setText("");
             //libriGUI.setLibri(gestionLibreria.getLibri());
         }));
         editMenu.aggiungi(new MenuItem("Modifica Libro", e -> {
-            center.aggiornaLibro();
+            Libro l = AggiornaLibroDialog.updateLibroByTitle(center.getLibri());
+            center.aggiornaLibro(l);
             rimuoviFiltri(genereMenu, statoMenu);
             searchField.setText("");
             //libriGUI.setLibri(gestionLibreria.getLibri());
 
         }));
         editMenu.aggiungi(new MenuItem("Rimuovi Libro", e -> {
-            center.rimuoviLibro();
+            Libro l = removeDialog.showRemoveDialog(center.getLibri());
+            center.rimuoviLibro(l);
             rimuoviFiltri(genereMenu, statoMenu);
             searchField.setText("");
             //libriGUI.setLibri(gestionLibreria.getLibri());

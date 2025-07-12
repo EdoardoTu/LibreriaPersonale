@@ -1,18 +1,20 @@
 package Command;
 
-import Template.Repository2;
-import Template.Template;
+import Template.*;
 
 public class AggiornaCommand extends undoComune {
 
 
-    public AggiornaCommand(Template r) {
+    private Libro aggiornato;
+
+    public AggiornaCommand(Template r, Libro aggiornato) {
         super(r);
+        this.aggiornato = aggiornato;
     }
 
     @Override
     public void execute() {
         vecchioStato = repo.readData(repo.getFilepath());
-        repo.update(repo.getFilepath());
+        repo.update(repo.getFilepath(),aggiornato);
     }
 }

@@ -1,24 +1,27 @@
-package GUI;
+package FrontEnd;
+
 import Template.Libro;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AggiornaLibroDialog {
-    public static boolean updateLibroByTitle(ArrayList<Libro> libri) {
+    public static Libro updateLibroByTitle(ArrayList<Libro> libri) {
         if (libri.isEmpty()) {
             JOptionPane.showMessageDialog(null,
                     "Nessun libro presente nel sistema!",
                     "Errore",
                     JOptionPane.WARNING_MESSAGE);
-            return false;
+            return null;
         }
 
+        // 1. Selezione libro per TITOLO (con controllo duplicati)
         List<String> titoliUnici = libri.stream()
                 .map(Libro::getTitolo)
                 .distinct()
-                .toList();
+                .collect(Collectors.toList());
 
         String selectedTitle = (String) JOptionPane.showInputDialog(
                 null,
@@ -30,15 +33,43 @@ public class AggiornaLibroDialog {
                 titoliUnici.get(0)
         );
 
-        if (selectedTitle == null) return false;
+        if (selectedTitle == null) return null;
 
-
-        Libro libroToUpdate = libri.stream()
+        List<Libro> libriCorrispondenti = libri.stream()
                 .filter(l -> l.getTitolo().equals(selectedTitle))
-                .findFirst()
-                .orElse(null);
+                .collect(Collectors.toList());
+
+        Libro libroToUpdate;
+
+        if (libriCorrispondenti.size() == 1) {
+            libroToUpdate = libriCorrispondenti.get(0);
+        } else {
+            // Se ci sono più libri, falli scegliere da una tabella
+            String[] columnNames = {"Titolo", "Autore", "ISBN"};
+            Object[][] data = libriCorrispondenti.stream()
+                    .map(l -> new Object[]{l.getTitolo(), l.getAutore(), l.getIsbn()})
+                    .toArray(Object[][]::new);
+
+            JTable table = new JTable(data, columnNames);
+            table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+            int result = JOptionPane.showConfirmDialog(null, new JScrollPane(table),
+                    "Seleziona il libro da modificare", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+            if (result == JOptionPane.OK_OPTION) {
+                int selectedRow = table.getSelectedRow();
+                if (selectedRow >= 0) {
+                    libroToUpdate = libriCorrispondenti.get(selectedRow);
+                } else {
+                    return null; // Nessuna selezione
+                }
+            } else {
+                return null; // Annullato
+            }
+        }
 
 
+        // 3. Selezione attributo da modificare
         String[] attributi = {"titolo", "autore", "genere", "valutazione", "stato"};
         String attributo = (String) JOptionPane.showInputDialog(
                 null,
@@ -50,13 +81,13 @@ public class AggiornaLibroDialog {
                 attributi[0]
         );
 
-        if (attributo == null) return false;
+        if (attributo == null) return null;
 
+        // 4. Input nuovo valore con validazione
         try {
             switch (attributo.toLowerCase()) {
                 case "titolo":
                     String newTitolo = JOptionPane.showInputDialog("Nuovo titolo:", libroToUpdate.getTitolo());
-                    System.out.println(libri);
                     if (newTitolo == null || newTitolo.trim().isEmpty() || newTitolo.matches(".*\\d.*")) {
                         throw new IllegalArgumentException("Titolo non valido!");
                     }
@@ -108,19 +139,18 @@ public class AggiornaLibroDialog {
                     }
                     break;
             }
-            System.out.println(libri);
             JOptionPane.showMessageDialog(null,
                     "Libro aggiornato con successo!",
                     "Successo",
                     JOptionPane.INFORMATION_MESSAGE);
-            return true;
+            return libroToUpdate;
 
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(null,
                     e.getMessage(),
                     "Errore",
                     JOptionPane.ERROR_MESSAGE);
-            return false;
+            return null;
         }
     }
 }

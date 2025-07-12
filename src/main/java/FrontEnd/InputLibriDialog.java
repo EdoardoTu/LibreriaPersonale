@@ -1,4 +1,5 @@
-package GUI;
+package FrontEnd;
+
 import Template.Libro;
 
 import javax.swing.*;

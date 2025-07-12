@@ -4,7 +4,7 @@ import Observer.InterfacciaObserver;
 import Observer.LibreriaSubject;
 import Strategy.*;
 import Template.Libro;
-import Template.Repository2;
+import Template.JsonReader;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -37,29 +37,29 @@ public class Center extends LibreriaSubject {
     }
     public void caricaLibri(String filepath) {
         System.out.println(filepath);
-        this.repositoryLibri = new Repository2(filepath);
+        this.repositoryLibri = new JsonReader(filepath);
         System.out.println(repositoryLibri.getFilepath());
         this.filepath = filepath;
         filtroManager.pulisciFiltri();
     }
 
-    public void aggiungiLibro(){
+    public void aggiungiLibro(ArrayList<Libro> libri){
         System.out.println("Aggiungi libro.");
         System.out.println(repositoryLibri.getFilepath());
-        aggiungiCommand = new aggiungiCommand(this.repositoryLibri);
+        aggiungiCommand = new aggiungiCommand(this.repositoryLibri,libri);
         aggiungiCommand.execute();
         storiaComandi.push(aggiungiCommand);
 
     }
 
-    public void aggiornaLibro() {
-         updateCommand = new AggiornaCommand(repositoryLibri);
+    public void aggiornaLibro(Libro aggiornato) {
+         updateCommand = new AggiornaCommand(repositoryLibri,aggiornato);
         updateCommand.execute();
         storiaComandi.push(updateCommand);
 
     }
-    public void rimuoviLibro() {
-        removeCommand = new rimuoviCommand(repositoryLibri);
+    public void rimuoviLibro(Libro daRimuovere) {
+        removeCommand = new rimuoviCommand(repositoryLibri,daRimuovere);
         removeCommand.execute();
         storiaComandi.push(removeCommand);
 
