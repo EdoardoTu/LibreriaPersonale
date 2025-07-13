@@ -18,7 +18,6 @@ public class JsonReader extends Template {
         super(filepath);
         this.filepath = filepath;
     }
-
     @Override
     public void writeData(String filepath, ArrayList<Libro> libri) {
         try (FileWriter filewriter = new FileWriter(filepath)){
@@ -30,7 +29,6 @@ public class JsonReader extends Template {
             throw new RuntimeException();
         }
     }
-
     @Override
     public ArrayList<Libro> readData(String filepath) {
         try (FileReader fileReader = new FileReader(filepath);){

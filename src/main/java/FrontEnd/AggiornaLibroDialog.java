@@ -44,7 +44,7 @@ public class AggiornaLibroDialog {
         if (libriCorrispondenti.size() == 1) {
             libroToUpdate = libriCorrispondenti.get(0);
         } else {
-            // Se ci sono più libri, falli scegliere da una tabella
+
             String[] columnNames = {"Titolo", "Autore", "ISBN"};
             Object[][] data = libriCorrispondenti.stream()
                     .map(l -> new Object[]{l.getTitolo(), l.getAutore(), l.getIsbn()})
@@ -61,15 +61,15 @@ public class AggiornaLibroDialog {
                 if (selectedRow >= 0) {
                     libroToUpdate = libriCorrispondenti.get(selectedRow);
                 } else {
-                    return null; // Nessuna selezione
+                    return null;
                 }
             } else {
-                return null; // Annullato
+                return null;
             }
         }
 
 
-        // 3. Selezione attributo da modificare
+
         String[] attributi = {"titolo", "autore", "genere", "valutazione", "stato"};
         String attributo = (String) JOptionPane.showInputDialog(
                 null,
@@ -83,7 +83,7 @@ public class AggiornaLibroDialog {
 
         if (attributo == null) return null;
 
-        // 4. Input nuovo valore con validazione
+
         try {
             switch (attributo.toLowerCase()) {
                 case "titolo":

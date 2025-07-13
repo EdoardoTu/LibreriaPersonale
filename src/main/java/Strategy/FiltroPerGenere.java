@@ -8,6 +8,7 @@ public class FiltroPerGenere implements FiltroStrategy {
     public FiltroPerGenere(String genere) {
         this.genere = genere;
     }
+    @Override
     public boolean filtra(Libro libro) {
         return libro.getGenere().equalsIgnoreCase(genere);
     }

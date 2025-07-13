@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class MainFrame  extends JFrame {
     private JTable tabellaLibri;
@@ -163,18 +164,10 @@ public class MainFrame  extends JFrame {
 
 private void fileChooser() {
     JFileChooser fileChooser = new JFileChooser();
-    fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
-        @Override
-        public boolean accept(File f) {
-            return f.getName().toLowerCase().endsWith(".json") || f.isDirectory();
-        }
-
-        @Override
-        public String getDescription() {
-            return "File JSON (*.json)";
-        }
-    });
-
+    FileNameExtensionFilter jsonFilter = new FileNameExtensionFilter(
+            "File JSON (*.json)", "json");
+    fileChooser.setFileFilter(jsonFilter);
+    fileChooser.setAcceptAllFileFilterUsed(false);
     if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
         selectedFile = fileChooser.getSelectedFile();
         JOptionPane.showMessageDialog(this, "File selezionato: " + selectedFile.getAbsolutePath());
@@ -205,7 +198,7 @@ private void fileChooser() {
         }
         libriGUI.setLibri(risultati);
         System.out.println(risultati);
-        center.notificaObserver(risultati);
+        center.notifyObservers(risultati);
 
     }
     private void rimuoviFiltri(MenuComposite genereMenu, MenuComposite statoMenu) {

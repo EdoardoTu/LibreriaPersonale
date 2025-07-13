@@ -53,11 +53,11 @@ public class InputLibriDialog {
                         throw new IllegalArgumentException("Autore non valido: no numeri/campi vuoti");
                     }
 
-                    int isbn;
+                    long isbn;
                     try {
-                        isbn = Integer.parseInt(isbnField.getText().trim());
+                        isbn = Long.parseLong(isbnField.getText().trim());
                     } catch (NumberFormatException e) {
-                        throw new IllegalArgumentException("ISBN deve essere un numero intero");
+                        throw new IllegalArgumentException("ISBN deve essere un numero valido");
                     }
 
                     Libro.Genere genere = (Libro.Genere) genereCombo.getSelectedItem();

@@ -12,7 +12,7 @@ import Command.*;
 import Template.Template;
 
 public class Center extends LibreriaSubject {
-    private Template repositoryLibri;
+    private Template reader;
     //public static inputHandler inputHandler ;
     private String filepath;
     private Stack<Command> storiaComandi = new Stack<>();
@@ -29,37 +29,37 @@ public class Center extends LibreriaSubject {
 
 
     public ArrayList<Libro> getLibri() {
-        if (repositoryLibri == null) {
+        if (reader == null) {
             System.out.println("Aggiungi prima un libro.");
             return null;
         }
-        return repositoryLibri.readData(this.filepath);
+        return reader.readData(this.filepath);
     }
     public void caricaLibri(String filepath) {
         System.out.println(filepath);
-        this.repositoryLibri = new JsonReader(filepath);
-        System.out.println(repositoryLibri.getFilepath());
+        this.reader = new JsonReader(filepath);
+        System.out.println(reader.getFilepath());
         this.filepath = filepath;
         filtroManager.pulisciFiltri();
     }
 
     public void aggiungiLibro(ArrayList<Libro> libri){
         System.out.println("Aggiungi libro.");
-        System.out.println(repositoryLibri.getFilepath());
-        aggiungiCommand = new aggiungiCommand(this.repositoryLibri,libri);
+        System.out.println(reader.getFilepath());
+        aggiungiCommand = new aggiungiCommand(this.reader,libri);
         aggiungiCommand.execute();
         storiaComandi.push(aggiungiCommand);
 
     }
 
     public void aggiornaLibro(Libro aggiornato) {
-         updateCommand = new AggiornaCommand(repositoryLibri,aggiornato);
+         updateCommand = new AggiornaCommand(reader,aggiornato);
         updateCommand.execute();
         storiaComandi.push(updateCommand);
 
     }
     public void rimuoviLibro(Libro daRimuovere) {
-        removeCommand = new rimuoviCommand(repositoryLibri,daRimuovere);
+        removeCommand = new rimuoviCommand(reader,daRimuovere);
         removeCommand.execute();
         storiaComandi.push(removeCommand);
 

@@ -5,12 +5,12 @@ import java.util.Objects;
 public class Libro {
     String titolo;
     String autore;
-    int isbn;
+    long isbn;
     Genere genere;
     int valutazione;
     Stato stato;
 
-    public Libro(String titolo, String autore, int isbn, Genere genere, int valutazione, Stato stato) {
+    public Libro(String titolo, String autore, long isbn, Genere genere, int valutazione, Stato stato) {
         this.titolo = titolo;
         this.autore = autore;
         this.isbn = isbn;
@@ -41,7 +41,7 @@ public class Libro {
     public String getAutore() {
         return autore;
     }
-    public int getIsbn() {return isbn;}
+    public long getIsbn() {return isbn;}
     public String getGenere() {return genere.toString();}
     public int getValutazione() {return valutazione;}
     public String getStato() {return stato.toString();}
