@@ -1,9 +1,12 @@
 package FrontEnd;
 
-import Template.Libro;
+
+import BackEnd.Libro;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class InputLibriDialog {
@@ -12,7 +15,7 @@ public class InputLibriDialog {
         boolean continua = true;
 
         while (continua) {
-            JPanel panel = new JPanel(new GridLayout(0, 2));
+            JPanel panel = new JPanel(new GridLayout(0, 2, 5, 5)); // Aggiunto un po' di spazio
 
             // Campi di input
             JTextField titoloField = new JTextField();
@@ -21,6 +24,25 @@ public class InputLibriDialog {
             JComboBox<Libro.Genere> genereCombo = new JComboBox<>(Libro.Genere.values());
             JComboBox<Libro.Stato> statoCombo = new JComboBox<>(Libro.Stato.values());
             JSpinner valutazioneSpinner = new JSpinner(new SpinnerNumberModel(3, 1, 5, 1));
+
+            // Aggiunta dell'ActionListener per abilitare/disabilitare la valutazione
+            statoCombo.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    Libro.Stato selectedStato = (Libro.Stato) statoCombo.getSelectedItem();
+                    if (selectedStato == Libro.Stato.da_leggere || selectedStato == Libro.Stato.in_lettura) {
+                        valutazioneSpinner.setEnabled(false);
+                    } else {
+                        valutazioneSpinner.setEnabled(true);
+                    }
+                }
+            });
+
+            // Imposta lo stato iniziale del JSpinner
+            Libro.Stato selectedStato = (Libro.Stato) statoCombo.getSelectedItem();
+            if (selectedStato == Libro.Stato.da_leggere || selectedStato == Libro.Stato.in_lettura) {
+                valutazioneSpinner.setEnabled(false);
+            }
 
             // Aggiungi componenti al pannello
             panel.add(new JLabel("Titolo*:"));
@@ -62,25 +84,19 @@ public class InputLibriDialog {
 
                     Libro.Genere genere = (Libro.Genere) genereCombo.getSelectedItem();
                     Libro.Stato stato = (Libro.Stato) statoCombo.getSelectedItem();
-                    if(stato == Libro.Stato.da_leggere || stato == Libro.Stato.in_lettura){
-                        valutazioneSpinner.hide();
-                        libri.add(new Libro(titolo, autore, isbn, genere, -1, stato));
+                    int valutazione = -1; // Valore di default
 
-                        continua = JOptionPane.showConfirmDialog(
-                                null, "Aggiungere un altro libro?", "Continua?",
-                                JOptionPane.YES_NO_OPTION
-                        ) == JOptionPane.YES_OPTION;
+                    if (valutazioneSpinner.isEnabled()) {
+                        valutazione = (int) valutazioneSpinner.getValue();
                     }
-                    else {
-                        int valutazione = (int) valutazioneSpinner.getValue();
 
-                        libri.add(new Libro(titolo, autore, isbn, genere, valutazione, stato));
+                    libri.add(new Libro(titolo, autore, isbn, genere, valutazione, stato));
 
-                        continua = JOptionPane.showConfirmDialog(
-                                null, "Aggiungere un altro libro?", "Continua?",
-                                JOptionPane.YES_NO_OPTION
-                        ) == JOptionPane.YES_OPTION;
-                    }
+                    continua = JOptionPane.showConfirmDialog(
+                            null, "Aggiungere un altro libro?", "Continua?",
+                            JOptionPane.YES_NO_OPTION
+                    ) == JOptionPane.YES_OPTION;
+
                 } catch (IllegalArgumentException e) {
                     JOptionPane.showMessageDialog(
                             null, e.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE
@@ -92,5 +108,4 @@ public class InputLibriDialog {
         }
         return libri;
     }
-
 }

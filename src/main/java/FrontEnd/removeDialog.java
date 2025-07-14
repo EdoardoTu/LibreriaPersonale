@@ -1,6 +1,6 @@
 package FrontEnd;
 
-import Template.Libro;
+import BackEnd.Libro;
 
 import javax.swing.*;
 import java.util.ArrayList;

@@ -1,8 +1,8 @@
 package Unit;
 
-import Template.*;
+import BackEnd.JsonReader;
+import BackEnd.Libro;
 import com.google.gson.Gson;
-import com.google.gson.JsonIOException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,11 +25,10 @@ public class testJsonreader {
 
     @BeforeEach
     void setUp() throws IOException {
-        // Crea file temporaneo
+
         File tempFile = tempDir.resolve("test_integration.json").toFile();
         testFilePath = tempFile.getAbsolutePath();
 
-        // Inizializza repository
         jsonReader = new JsonReader(testFilePath);
         creaFileJsonTest();
 
@@ -64,10 +63,10 @@ public class testJsonreader {
     @Test
     @DisplayName("Lettura dati da file JSON")
     void testReadDataFromJson() {
-        // Act
+
         ArrayList<Libro> result = jsonReader.readData(testFilePath);
 
-        // Assert
+
         assertNotNull(result);
         assertEquals(2, result.size());
 
@@ -83,7 +82,7 @@ public class testJsonreader {
     @Test
     @DisplayName("Scrittura dati su file JSON")
     void testWriteDataToJson() throws IOException {
-        // Arrange - Nuovo file per test scrittura
+
         File nuovoFile = tempDir.resolve("test_write.json").toFile();
         String nuovoPath = nuovoFile.getAbsolutePath();
 
@@ -91,10 +90,9 @@ public class testJsonreader {
         nuoviLibri.add(new Libro("1984", "Orwell", 333,
                 Libro.Genere.fantascienza, 5, Libro.Stato.in_lettura));
 
-        // Act
         jsonReader.writeData(nuovoPath, nuoviLibri);
 
-        // Assert - Rileggi il file per verificare
+
 
         ArrayList<Libro> letti = jsonReader.readData(nuovoPath);
         System.out.println(letti.toString());

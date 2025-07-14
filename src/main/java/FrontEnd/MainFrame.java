@@ -1,7 +1,7 @@
 package FrontEnd;
 
 import BackEnd.Center;
-import Template.Libro;
+import BackEnd.Libro;
 
 import javax.swing.*;
 import java.awt.*;

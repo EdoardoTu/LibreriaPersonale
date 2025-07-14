@@ -1,6 +1,7 @@
 package Command;
 
-import Template.*;
+import BackEnd.Libro;
+import BackEnd.Template;
 
 public class rimuoviCommand extends undoComune{
 

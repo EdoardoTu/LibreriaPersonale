@@ -3,17 +3,13 @@ package BackEnd;
 import Observer.InterfacciaObserver;
 import Observer.LibreriaSubject;
 import Strategy.*;
-import Template.Libro;
-import Template.JsonReader;
 
 import java.util.ArrayList;
 import java.util.Stack;
 import Command.*;
-import Template.Template;
 
 public class Center extends LibreriaSubject {
     private Template reader;
-    //public static inputHandler inputHandler ;
     private String filepath;
     private Stack<Command> storiaComandi = new Stack<>();
     private StrategyConcreto filtroManager;

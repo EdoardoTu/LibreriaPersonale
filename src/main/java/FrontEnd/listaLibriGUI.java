@@ -1,7 +1,7 @@
 package FrontEnd;
 
 
-import Template.Libro;
+import BackEnd.Libro;
 import Observer.InterfacciaObserver;
 
 import javax.swing.table.AbstractTableModel;

@@ -1,6 +1,6 @@
 package Observer;
 
-import Template.Libro;
+import BackEnd.Libro;
 
 import java.util.ArrayList;
 

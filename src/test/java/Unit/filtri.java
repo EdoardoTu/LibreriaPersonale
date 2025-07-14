@@ -1,7 +1,7 @@
 package Unit;
 
 import Strategy.*;
-import Template.Libro;
+import BackEnd.Libro;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -36,9 +36,9 @@ public class filtri {
     void testFiltroPerGenereFantasy() {
         FiltroPerGenere filtro = new FiltroPerGenere("fantasy");
 
-        // Test con libro fantasy
+
         assertTrue(filtro.filtra(libri.get(0))); // Harry Potter
-        // Test con libro non fantasy
+
         assertFalse(filtro.filtra(libri.get(1))); // Dracula
     }
 
@@ -78,7 +78,7 @@ public class filtri {
     @Test
     @DisplayName("Filtri che non producono risultati")
     void testFiltriSenzaRisultati() {
-        // Fantasy + Da leggere (nessun libro soddisfa entrambi)
+
         filtroManager.aggiungiFiltro("fantasy", new FiltroPerGenere("fantasy"));
         filtroManager.aggiungiFiltro("da_leggere", new FiltroPerStato("da_leggere"));
 
@@ -93,13 +93,12 @@ public class filtri {
         filtroManager.aggiungiFiltro("fantasy", new FiltroPerGenere("fantasy"));
         filtroManager.aggiungiFiltro("letto", new FiltroPerStato("letto"));
 
-        // Prima dell'applicazione: 1 risultato
+
         assertEquals(1, filtroManager.applicaFiltri(libri).size());
 
-        // Rimuovi il filtro per stato
+
         filtroManager.rimuoviFiltro("letto");
 
-        // Dopo la rimozione: dovrebbe restare solo il filtro fantasy
         assertEquals(1, filtroManager.applicaFiltri(libri).size());
     }
 

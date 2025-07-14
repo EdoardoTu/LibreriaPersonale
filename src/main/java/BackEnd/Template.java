@@ -1,8 +1,5 @@
-package Template;
+package BackEnd;
 
-import FrontEnd.AggiornaLibroDialog;
-import FrontEnd.InputLibriDialog;
-import FrontEnd.removeDialog;
 import Observer.LibreriaSubject;
 
 import java.util.ArrayList;

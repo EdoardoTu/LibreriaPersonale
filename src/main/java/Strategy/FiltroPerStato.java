@@ -1,6 +1,6 @@
 package Strategy;
 
-import Template.Libro;
+import BackEnd.Libro;
 
 public class FiltroPerStato implements FiltroStrategy {
     private final String stato;

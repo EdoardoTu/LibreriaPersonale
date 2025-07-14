@@ -1,11 +1,10 @@
 package Strategy;
 
-import Template.Libro;
+import BackEnd.Libro;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class StrategyConcreto {
     //private ArrayList<FiltroStrategy> filtriAttivi = new ArrayList<>();
